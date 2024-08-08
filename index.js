@@ -18,9 +18,16 @@ const performScraping = async () => {
         await bot.close();
         scrapedData = data;
         console.log('Scraping successful', data);
+        startServer(); 
     } catch (e) {
         console.log('Scraping failed', e);
     }
+};
+
+const startServer = () => {
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}/data`);
+    });
 };
 
 app.post('/scrape', async (req, res) => {
@@ -37,7 +44,4 @@ cron.schedule('0 * * * *', () => {
     performScraping();
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}/data`);
-    performScraping(); 
-});
+performScraping();
