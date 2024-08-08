@@ -10,7 +10,6 @@ app.use(bodyParser.json());
 
 let scrapedData = [];
 
-// Fungsi untuk melakukan scraping dan menyimpan data di server
 const performScraping = async () => {
     try {
         const url = "https://www.jkt48showroom.com/theater-schedule";
@@ -24,18 +23,15 @@ const performScraping = async () => {
     }
 };
 
-// Endpoint untuk memulai scraping secara manual
 app.post('/scrape', async (req, res) => {
     await performScraping();
     res.json({ message: 'Scraping triggered' });
 });
 
-// Endpoint untuk mengambil data hasil scraping
 app.get('/data', (req, res) => {
     res.json(scrapedData);
 });
 
-// Menjalankan scraping otomatis setiap jam (atur sesuai kebutuhan)
 cron.schedule('0 * * * *', () => {
     console.log('Running scheduled scraping');
     performScraping();
@@ -43,5 +39,5 @@ cron.schedule('0 * * * *', () => {
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}/data`);
-    performScraping(); // Jalankan scraping saat server dimulai
+    performScraping(); 
 });
