@@ -1,6 +1,6 @@
-# JKT48 Website Scrapping
+# JKT48 API Scrapping
 
-Scrapping data from www.jkt48showroom.com website. Run the server and the scrapped data will be posted to the server. You are free to use it for your get API needs. Scrapped using NodeJs with Puppeteer, and posted using Express.Js.
+Scrapping data from some website with many information about JKT48. Run the server and the scrapped data will be posted to the server. You are free to use it for your get API needs. Scrapped using NodeJs with Puppeteer, and posted using Express.Js.
 
 How to use it?
 1. Initialize NPM, run:
