@@ -9,15 +9,21 @@ const port = 8000;
 app.use(bodyParser.json());
 
 let scrapedData = [];
+let setlistData = []; // New variable for setlist data
 
 const performScraping = async () => {
     try {
         const url = "https://www.jkt48showroom.com/theater-schedule";
         await bot.init();
-        const data = await bot.scrape(url);
+        
+        // Scrape main data
+        scrapedData = await bot.scrape(url);
+        
+        // Scrape additional setlist data
+        setlistData = await bot.scrapeSetlist(); // Call new function for setlist scraping
+        
         await bot.close();
-        scrapedData = data;
-        console.log('Scraping successful', data);
+        console.log('Scraping successful');
         startServer(); 
     } catch (e) {
         console.log('Scraping failed', e);
@@ -26,17 +32,22 @@ const performScraping = async () => {
 
 const startServer = () => {
     app.listen(port, () => {
-        console.log(`Server is running on http://localhost:${port}/data`);
+        console.log(`Server is running on http://192.168.100.41:${port}/`);
     });
 };
 
-app.post('/scrape', async (req, res) => {
+app.post('/', async (req, res) => {
     await performScraping();
-    res.json({ message: 'Scraping triggered' });
+    res.json({ message: 'Hi there!' });
 });
 
 app.get('/data', (req, res) => {
-    res.json(scrapedData);
+    res.json(scrapedData); // Return main scraped data
+});
+
+// New endpoint for setlist data
+app.get('/setlist', (req, res) => {
+    res.json(setlistData); // Return setlist data
 });
 
 cron.schedule('0 * * * *', () => {
