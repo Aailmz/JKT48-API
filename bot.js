@@ -35,7 +35,6 @@ const bot = {
         await newPage.goto(url, { waitUntil: 'networkidle2' });
 
         try {
-            // Scraping title, date, and time
             const title = await newPage.$eval('div.theater-container div.setlist-container div.menu-setlist.mt-1 div.mt-1 span', el => el.innerText);
             
             const infoElements = await newPage.$$eval('div.theater-container div.theater-info div.info-container div.menu-setlist.mt-1 div.mt-1 p', elements => {
@@ -44,7 +43,6 @@ const bot = {
             const date = infoElements[0] || ''; 
             const time = infoElements[1] || '';
 
-            // Scraping line up
             const lineUp = await newPage.$$eval('div.card-member-container div.member-detail div.btn-member div.member-name', elements => {
                 return elements.map(el => el.innerText);
             });

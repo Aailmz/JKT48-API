@@ -8,16 +8,14 @@ const port = 8000;
 
 app.use(bodyParser.json());
 
-let theaterScheduleData = []; // Variable for theater schedule data
-let setlistData = []; // Variable for setlist data
+let theaterScheduleData = []; 
 
 const performScraping = async () => {
     try {
-        const url = "https://www.jkt48showroom.com/theater-schedule"; // URL for theater schedules
+        const theaterUrl = "https://www.jkt48showroom.com/theater-schedule"; 
         await bot.init();
 
-        // Scrape theater schedule data
-        theaterScheduleData = await bot.scrape(url);
+        theaterScheduleData = await bot.scrape(theaterUrl);
         
         await bot.close();
         console.log('Scraping successful');
@@ -33,18 +31,17 @@ const startServer = () => {
     });
 };
 
-app.post('/welcome', (req, res) => {
+app.get('/welcome', (req, res) => {
     res.send(`
         <html>
             <head>
                 <title>Welcome</title>
             </head>
             <body>
-                <h1>Welcome to the Theater Schedule Scraper!</h1>
-                <p>Use the following endpoints:</p>
+                <h1>Hi Fellas!</h1>
+                <p>For now, you can use this following endpoints:</p>
                 <ul>
-                    <li><strong>/theater-schedule</strong> - Shows all theater schedules.</li>
-                    <li><strong>/setlist</strong> - Shows the setlist data.</li>
+                    <li><strong>/theater-schedule</strong> - Shows current JKT48 Theater Schedules.</li>
                 </ul>
             </body>
         </html>
@@ -52,11 +49,7 @@ app.post('/welcome', (req, res) => {
 });
 
 app.get('/theater-schedule', (req, res) => {
-    res.json(theaterScheduleData); // Return scraped theater schedule data
-});
-
-app.get('/setlist', (req, res) => {
-    res.json(setlistData); // Return scraped setlist data
+    res.json(theaterScheduleData); 
 });
 
 cron.schedule('0 * * * *', () => {

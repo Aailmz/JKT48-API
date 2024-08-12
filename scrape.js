@@ -2,8 +2,10 @@ const bot = require('./bot');
 
 (async () => {
     await bot.init();
-    const url = "https://www.jkt48showroom.com/theater-schedule";
-    const data = await bot.scrape(url);
-    console.log(data);
+
+    const theaterUrl = "https://www.jkt48showroom.com/theater-schedule";
+    const theaterData = await bot.scrape(theaterUrl);
+    console.log('Theater Schedule Data:', theaterData);
+
     await bot.close();
 })();
