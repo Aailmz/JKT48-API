@@ -35,6 +35,7 @@ const bot = {
         await newPage.goto(url, { waitUntil: 'networkidle2' });
 
         try {
+            // Scraping title, date, and time
             const title = await newPage.$eval('div.theater-container div.setlist-container div.menu-setlist.mt-1 div.mt-1 span', el => el.innerText);
             
             const infoElements = await newPage.$$eval('div.theater-container div.theater-info div.info-container div.menu-setlist.mt-1 div.mt-1 p', elements => {
@@ -43,28 +44,13 @@ const bot = {
             const date = infoElements[0] || ''; 
             const time = infoElements[1] || '';
 
-            await newPage.close();
-            return { title, date, time };
-        } catch (e) {
-            console.log(e);
-            await newPage.close();
-            return { error: e.message };
-        }
-    },
-
-    // New method for scraping setlist data
-    scrapeSetlist: async () => {
-        const url = "https://www.jkt48showroom.com/some-other-setlist-url"; // Update this URL
-        const newPage = await bot.browser.newPage();
-        await newPage.goto(url, { waitUntil: 'networkidle2' });
-
-        try {
-            const setlistItems = await newPage.$$eval('div.setlist-item-selector', elements => { // Update this selector
+            // Scraping line up
+            const lineUp = await newPage.$$eval('div.card-member-container div.member-detail div.btn-member div.member-name', elements => {
                 return elements.map(el => el.innerText);
             });
 
             await newPage.close();
-            return setlistItems; // Return the scraped setlist data
+            return { title, date, time, lineUp };
         } catch (e) {
             console.log(e);
             await newPage.close();
