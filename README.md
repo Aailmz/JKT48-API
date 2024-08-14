@@ -16,4 +16,7 @@ How to use it?
    
    node index.js
 
+For now, you can use this selected endpoints:
+- /theater-schedule : For see current JKT48 Theater schedule.
+
 I will keep updating this Repository, stay tune!
