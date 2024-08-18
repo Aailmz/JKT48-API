@@ -19,4 +19,6 @@ How to use it?
    
    node index.js
 
-I will keep updating this Repository, stay tune!
+5. Select the endpoint you want to use.
+
+Feel free to use, I will keep updating this Repository, stay tune!
