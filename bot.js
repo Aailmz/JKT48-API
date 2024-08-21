@@ -11,17 +11,20 @@ const bot = {
 
     scrape: async (urlWeb) => {
         await bot.page.goto(urlWeb, { waitUntil: 'networkidle2' });
-        const targets = await bot.page.$$("div.mb-4.col-sm-12.col-md-4");
+        const targets = await bot.page.$$("div.react-reveal div.react-reveal div.row div.mb-4.col-sm-12.col-md-4 a"); 
         const results = [];
+        const scrapedUrls = new Set();
 
         for (const target of targets) {
             try {
-                const url = await target.$eval('a', el => el.getAttribute('href'));
+                const url = await bot.page.evaluate(el => el.getAttribute('href'), target);
                 const scheduleUrl = 'https://www.jkt48showroom.com/' + url;
-                console.log(scheduleUrl);
 
-                const data = await bot.scrapeSchedule(scheduleUrl);
-                results.push({ scheduleUrl, ...data });
+                if (!scrapedUrls.has(scheduleUrl)) {
+                    scrapedUrls.add(scheduleUrl);
+                    const data = await bot.scrapeSchedule(scheduleUrl);
+                    results.push({ scheduleUrl, ...data });
+                }
             } catch (e) {
                 console.log(e);
             }
@@ -36,7 +39,7 @@ const bot = {
 
         try {
             const title = await newPage.$eval('div.theater-container div.setlist-container div.menu-setlist.mt-1 div.mt-1 span', el => el.innerText);
-            
+
             const infoElements = await newPage.$$eval('div.theater-container div.theater-info div.info-container div.menu-setlist.mt-1 div.mt-1 p', elements => {
                 return elements.map(el => el.innerText);
             });

@@ -12,14 +12,14 @@ let theaterScheduleData = [];
 
 const performScraping = async () => {
     try {
-        const theaterUrl = "https://www.jkt48showroom.com/theater-schedule"; 
+        const theaterUrl = "https://www.jkt48showroom.com/"; 
         await bot.init();
+        if (theaterScheduleData.length === 0) {
+            theaterScheduleData = await bot.scrape(theaterUrl);
+            console.log('Scraping successful');
+        }
 
-        theaterScheduleData = await bot.scrape(theaterUrl);
-        
         await bot.close();
-        console.log('Scraping successful');
-        startServer();
     } catch (e) {
         console.log('Scraping failed', e);
     }
@@ -32,7 +32,8 @@ const startServer = () => {
 };
 
 app.get('/welcome', (req, res) => {
-    res.send(`
+    res.send(
+        `<!DOCTYPE html>
         <html>
             <head>
                 <title>Welcome</title>
@@ -44,17 +45,17 @@ app.get('/welcome', (req, res) => {
                     <li><strong>/theater-schedule</strong> - Shows current JKT48 Theater Schedules.</li>
                 </ul>
             </body>
-        </html>
-    `);
+        </html>`
+    );
 });
 
 app.get('/theater-schedule', (req, res) => {
     res.json(theaterScheduleData); 
 });
 
-cron.schedule('0 * * * *', () => {
-    console.log('Running scheduled scraping');
-    performScraping();
-});
+performScraping().then(startServer);
 
-performScraping();
+cron.schedule('0 * * * *', async () => {
+    console.log('Running scheduled scraping');
+    await performScraping();
+});
